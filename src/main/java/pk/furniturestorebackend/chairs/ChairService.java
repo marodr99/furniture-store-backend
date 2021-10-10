@@ -1,11 +1,10 @@
 package pk.furniturestorebackend.chairs;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pk.furniturestorebackend.database.furniture.chairs.Chair;
 import pk.furniturestorebackend.database.furniture.chairs.ChairRepository;
+import pk.furniturestorebackend.exceptions.NotFoundException;
 
 @Service
 public class ChairService {
@@ -17,10 +16,9 @@ public class ChairService {
         this.chairRepository = chairRepository;
     }
 
-    public Page<Chair> getAllChairs(Integer page) {
-        if (page < 0)
-            throw new IllegalArgumentException("Page number is incorrect");
-        PageRequest pageRequest = PageRequest.of(page, PAGE_RESULT_SIZE);
-        return chairRepository.findAll(pageRequest);
+    public Chair getChair(Integer id) {
+        if (id < 0)
+            throw new IllegalArgumentException("Id can not be less than 0");
+        return chairRepository.findById(id).orElseThrow(() -> new NotFoundException("Chair with id " + id + " not found"));
     }
 }
