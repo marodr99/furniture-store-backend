@@ -3,10 +3,8 @@ package pk.furniturestorebackend.controllers.furniture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pk.furniturestorebackend.chairs.ChairsSearchOptions;
 import pk.furniturestorebackend.database.furniture.Furniture;
 import pk.furniturestorebackend.database.furniture.FurnitureType;
 import pk.furniturestorebackend.furniture.FurnitureResponse;
@@ -28,6 +26,15 @@ public class FurnitureController {
         Page<Furniture> furniture = furnitureService
                 .getAllFurniture(FurnitureType.valueOf(furnitureType.toUpperCase()), page);
         FurnitureResponse furnitureResponse = new FurnitureResponse(furniture.getTotalPages(), furniture.getContent());
+        return ResponseEntity.ok(furnitureResponse);
+    }
+
+    @PostMapping("/chairs/specific/{page}")
+    public ResponseEntity<FurnitureResponse> getSpecificChairs(
+            @PathVariable Integer page,
+            @RequestBody ChairsSearchOptions chairsSearchOptions) {
+        Page<Furniture> specificChairs = furnitureService.getSpecificChairs(page, chairsSearchOptions);
+        FurnitureResponse furnitureResponse = new FurnitureResponse(specificChairs.getTotalPages(), specificChairs.getContent());
         return ResponseEntity.ok(furnitureResponse);
     }
 }

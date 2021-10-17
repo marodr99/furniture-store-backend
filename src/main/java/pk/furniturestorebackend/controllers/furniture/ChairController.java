@@ -10,6 +10,9 @@ import pk.furniturestorebackend.chairs.ChairService;
 import pk.furniturestorebackend.chairs.SingleChairResponse;
 import pk.furniturestorebackend.database.furniture.chairs.Chair;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/chairs")
 public class ChairController {
@@ -25,5 +28,11 @@ public class ChairController {
         Chair chair = chairService.getChair(id);
         SingleChairResponse singleChairResponse = new SingleChairResponse(chair);
         return ResponseEntity.ok(singleChairResponse);
+    }
+
+    @GetMapping("/search/options")
+    public ResponseEntity<Map<String, List<String>>> getChairsSearchOptions() {
+        Map<String, List<String>> chairsSearchOptions = chairService.getChairsSearchOptions();
+        return ResponseEntity.ok(chairsSearchOptions);
     }
 }
