@@ -9,6 +9,7 @@ import pk.furniturestorebackend.database.furniture.Furniture;
 import pk.furniturestorebackend.database.furniture.FurnitureType;
 import pk.furniturestorebackend.furniture.FurnitureResponse;
 import pk.furniturestorebackend.furniture.FurnitureService;
+import pk.furniturestorebackend.wardrobes.WardrobesSearchOptions;
 
 @RestController
 @RequestMapping("/furniture")
@@ -34,6 +35,15 @@ public class FurnitureController {
             @PathVariable Integer page,
             @RequestBody ChairsSearchOptions chairsSearchOptions) {
         Page<Furniture> specificChairs = furnitureService.getSpecificChairs(page, chairsSearchOptions);
+        FurnitureResponse furnitureResponse = new FurnitureResponse(specificChairs.getTotalPages(), specificChairs.getContent());
+        return ResponseEntity.ok(furnitureResponse);
+    }
+
+    @PostMapping("/wardrobes/specific/{page}")
+    public ResponseEntity<FurnitureResponse> getSpecificWardrobes(
+            @PathVariable Integer page,
+            @RequestBody WardrobesSearchOptions wardrobesSearchOptions) {
+        Page<Furniture> specificChairs = furnitureService.getSpecificWardrobes(page, wardrobesSearchOptions);
         FurnitureResponse furnitureResponse = new FurnitureResponse(specificChairs.getTotalPages(), specificChairs.getContent());
         return ResponseEntity.ok(furnitureResponse);
     }

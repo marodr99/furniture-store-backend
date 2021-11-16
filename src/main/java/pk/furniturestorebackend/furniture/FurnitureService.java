@@ -10,6 +10,7 @@ import pk.furniturestorebackend.database.furniture.Furniture;
 import pk.furniturestorebackend.database.furniture.FurnitureRepository;
 import pk.furniturestorebackend.database.furniture.FurnitureType;
 import pk.furniturestorebackend.database.furniture.SortOption;
+import pk.furniturestorebackend.wardrobes.WardrobesSearchOptions;
 
 @Service
 public class FurnitureService {
@@ -37,6 +38,16 @@ public class FurnitureService {
         return furnitureRepository.findSpecificChairs(chairsSearchOptions.getTitle(), chairsSearchOptions.getColor(),
                 chairsSearchOptions.getChairMaterial(), chairsSearchOptions.getStartPrice(),
                 chairsSearchOptions.getEndPrice(), pageRequest);
+    }
+
+    public Page<Furniture> getSpecificWardrobes(Integer page, WardrobesSearchOptions wardrobesSearchOptions) {
+        if (page < 0) {
+            throw new IllegalArgumentException("Page number is incorrect");
+        }
+        PageRequest pageRequest = PageRequest.of(page, PAGE_RESULT_SIZE, getProperSortOption(wardrobesSearchOptions.getSortOption()));
+        return furnitureRepository.findSpecificChairs(wardrobesSearchOptions.getTitle(), wardrobesSearchOptions.getColor(),
+                wardrobesSearchOptions.getWardrobeMaterial(), wardrobesSearchOptions.getStartPrice(),
+                wardrobesSearchOptions.getEndPrice(), pageRequest);
     }
 
     private Sort getProperSortOption(SortOption sortOption) {

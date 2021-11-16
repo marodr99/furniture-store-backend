@@ -11,10 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/users/register").permitAll();
+        http.cors();
 
         http.csrf().disable();
     }
