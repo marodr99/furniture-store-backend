@@ -52,6 +52,12 @@
             <artifactId>commons-text</artifactId>
             <version>1.9</version>
         </dependency>
+        <!--    KEYCLOAK    -->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-spring-boot-starter</artifactId>
+            <version>15.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>

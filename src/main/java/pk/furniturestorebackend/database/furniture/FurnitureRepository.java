@@ -16,13 +16,19 @@ public interface FurnitureRepository extends JpaRepository<Furniture, Integer> {
             "and (:color is null or c.color = :color) and " +
             "(:chairMaterial is null or c.material = :chairMaterial) and " +
             "(c.furniture.price >= :startPrice) and (:endPrice = 0.0 or c.furniture.price <= :endPrice)")
-    Page<Furniture> findSpecificChairs(String title, String color, ChairMaterial chairMaterial, double startPrice,
-                                       double endPrice, Pageable pageable);
+    Page<Furniture> findSpecificWardrobes(String title, String color, ChairMaterial chairMaterial, double startPrice,
+                                          double endPrice, Pageable pageable);
 
     @Query("SELECT c.furniture FROM Wardrobe c JOIN c.furniture f WHERE (:title is null or f.title LIKE concat(:title, '%')) " +
             "and (:color is null or c.color = :color) and " +
             "(:wardrobeMaterial is null or c.material = :wardrobeMaterial) and " +
             "(c.furniture.price >= :startPrice) and (:endPrice = 0.0 or c.furniture.price <= :endPrice)")
-    Page<Furniture> findSpecificChairs(String title, String color, WardrobeMaterial wardrobeMaterial, double startPrice,
-                                       double endPrice, Pageable pageable);
+    Page<Furniture> findSpecificWardrobes(String title, String color, WardrobeMaterial wardrobeMaterial, double startPrice,
+                                          double endPrice, Pageable pageable);
+
+    @Query("SELECT c.stock FROM Chair c WHERE c.furniture.id = (:furnitureId)")
+    Integer getStockForChair(Integer furnitureId);
+
+    @Query("SELECT w.stock FROM Wardrobe w WHERE w.furniture.id = (:furnitureId)")
+    Integer getStockForWardrobe(Integer furnitureId);
 }

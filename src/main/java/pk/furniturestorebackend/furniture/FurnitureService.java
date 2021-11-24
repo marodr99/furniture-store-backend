@@ -35,7 +35,7 @@ public class FurnitureService {
             throw new IllegalArgumentException("Page number is incorrect");
         }
         PageRequest pageRequest = PageRequest.of(page, PAGE_RESULT_SIZE, getProperSortOption(chairsSearchOptions.getSortOption()));
-        return furnitureRepository.findSpecificChairs(chairsSearchOptions.getTitle(), chairsSearchOptions.getColor(),
+        return furnitureRepository.findSpecificWardrobes(chairsSearchOptions.getTitle(), chairsSearchOptions.getColor(),
                 chairsSearchOptions.getChairMaterial(), chairsSearchOptions.getStartPrice(),
                 chairsSearchOptions.getEndPrice(), pageRequest);
     }
@@ -45,7 +45,7 @@ public class FurnitureService {
             throw new IllegalArgumentException("Page number is incorrect");
         }
         PageRequest pageRequest = PageRequest.of(page, PAGE_RESULT_SIZE, getProperSortOption(wardrobesSearchOptions.getSortOption()));
-        return furnitureRepository.findSpecificChairs(wardrobesSearchOptions.getTitle(), wardrobesSearchOptions.getColor(),
+        return furnitureRepository.findSpecificWardrobes(wardrobesSearchOptions.getTitle(), wardrobesSearchOptions.getColor(),
                 wardrobesSearchOptions.getWardrobeMaterial(), wardrobesSearchOptions.getStartPrice(),
                 wardrobesSearchOptions.getEndPrice(), pageRequest);
     }
