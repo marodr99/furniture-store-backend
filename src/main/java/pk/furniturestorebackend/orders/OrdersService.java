@@ -59,4 +59,8 @@ public class OrdersService {
         orderEntity.setEmail(SecurityConfig.getPrincipal());
         return orderEntity;
     }
+
+    public SingleOrder getOrder(Integer id) {
+        return ordersRepository.findByOrderIdAndEmail(id, SecurityConfig.getPrincipal());
+    }
 }

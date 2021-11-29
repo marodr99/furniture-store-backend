@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pk.furniturestorebackend.orders.Order;
 import pk.furniturestorebackend.orders.OrdersService;
 import pk.furniturestorebackend.orders.PlaceOrderRequest;
+import pk.furniturestorebackend.orders.SingleOrder;
 
 import java.util.List;
 
@@ -30,5 +31,11 @@ public class OrdersController {
     public ResponseEntity<List<Order>> getOrders() {
         List<Order> orders = ordersService.getOrders();
         return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SingleOrder> getOrder(@PathVariable Integer id) {
+        SingleOrder order = ordersService.getOrder(id);
+        return ResponseEntity.ok(order);
     }
 }
