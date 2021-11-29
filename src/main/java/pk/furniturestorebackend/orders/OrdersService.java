@@ -13,6 +13,7 @@ import pk.furniturestorebackend.exceptions.NotFoundException;
 import pk.furniturestorebackend.security.SecurityConfig;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class OrdersService {
@@ -36,6 +37,10 @@ public class OrdersService {
         OrderEntity orderEntity = createOrderEntity(orderRequest, furniture);
         ordersRepository.save(orderEntity);
 
+    }
+
+    public List<Order> getOrders() {
+        return ordersRepository.findAllByEmailOrderByDateDesc(SecurityConfig.getPrincipal());
     }
 
     private Integer getFurnitureStock(Integer furnitureId, FurnitureType furnitureType) {
