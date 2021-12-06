@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pk.furniturestorebackend.chairs.ChairsSearchOptions;
 import pk.furniturestorebackend.database.furniture.Furniture;
 import pk.furniturestorebackend.database.furniture.FurnitureType;
+import pk.furniturestorebackend.furniture.FurnitureEditRequest;
 import pk.furniturestorebackend.furniture.FurnitureResponse;
 import pk.furniturestorebackend.furniture.FurnitureService;
 import pk.furniturestorebackend.wardrobes.WardrobesSearchOptions;
@@ -46,5 +47,11 @@ public class FurnitureController {
         Page<Furniture> specificChairs = furnitureService.getSpecificWardrobes(page, wardrobesSearchOptions);
         FurnitureResponse furnitureResponse = new FurnitureResponse(specificChairs.getTotalPages(), specificChairs.getContent());
         return ResponseEntity.ok(furnitureResponse);
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<Void> editFurniture(@RequestBody FurnitureEditRequest furnitureEditRequest) {
+        furnitureService.editFurniture(furnitureEditRequest);
+        return ResponseEntity.ok().build();
     }
 }
