@@ -90,7 +90,6 @@ public class FurnitureService {
         } else if (requestFurnitureType.equalsIgnoreCase(FurnitureType.WARDROBES.name())) {
             Wardrobe wardrobe = wardrobeRepository.findById(id).orElse(new Wardrobe());
             updateWardrobe(wardrobe, furnitureEditRequest, furniture);
-            wardrobeRepository.save(wardrobe);
         }
     }
 
@@ -116,7 +115,7 @@ public class FurnitureService {
         chair.setDepth(furnitureEditRequest.getDepth());
         chair.setColor(furnitureEditRequest.getColor());
         chair.setMaterial(ChairMaterial.valueOf(furnitureEditRequest.getMaterial().toUpperCase()));
-        chair.setAdditionalInformation(chair.getAdditionalInformation());
+        chair.setAdditionalInformation(furnitureEditRequest.getAdditionalInformation());
         chair.setStock(furnitureEditRequest.getStock());
         chair.setFileName(furnitureEditRequest.getFileName());
         chair.setImagesUrl(furnitureEditRequest.getImagesUrl());
