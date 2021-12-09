@@ -19,6 +19,8 @@ import pk.furniturestorebackend.database.furniture.wardrobes.WardrobeMaterial;
 import pk.furniturestorebackend.database.furniture.wardrobes.WardrobeRepository;
 import pk.furniturestorebackend.wardrobes.WardrobesSearchOptions;
 
+import java.util.Optional;
+
 @Service
 public class FurnitureService {
     private static final int PAGE_RESULT_SIZE = 30;
@@ -78,23 +80,27 @@ public class FurnitureService {
     }
 
     @Transactional
-    public void editFurniture(FurnitureEditRequest furnitureEditRequest) {
+    public Integer editFurniture(FurnitureEditRequest furnitureEditRequest) {
         Integer id = furnitureEditRequest.getId();
         Furniture furniture = furnitureRepository.findById(id).orElse(new Furniture());
         updateFurniture(furniture, furnitureEditRequest);
+        Furniture savedFurniture = furnitureRepository.save(furniture);
         String requestFurnitureType = furnitureEditRequest.getFurnitureType();
 
         if (requestFurnitureType.equalsIgnoreCase(FurnitureType.CHAIRS.name())) {
             Chair chair = chairRepository.findById(id).orElse(new Chair());
-            updateChair(chair, furnitureEditRequest, furniture);
+            updateChair(chair, furnitureEditRequest, savedFurniture);
+            chairRepository.save(chair);
         } else if (requestFurnitureType.equalsIgnoreCase(FurnitureType.WARDROBES.name())) {
             Wardrobe wardrobe = wardrobeRepository.findById(id).orElse(new Wardrobe());
-            updateWardrobe(wardrobe, furnitureEditRequest, furniture);
+            updateWardrobe(wardrobe, furnitureEditRequest, savedFurniture);
+            wardrobeRepository.save(wardrobe);
         }
+        return savedFurniture.getId();
     }
 
     private void updateWardrobe(Wardrobe wardrobe, FurnitureEditRequest furnitureEditRequest, Furniture furniture) {
-        wardrobe.setFurniture_id(furnitureEditRequest.getId());
+        wardrobe.setFurniture_id(furniture.getId());
         wardrobe.setWidth(furnitureEditRequest.getWidth());
         wardrobe.setHeight(furnitureEditRequest.getHeight());
         wardrobe.setDepth(furnitureEditRequest.getDepth());
@@ -102,13 +108,13 @@ public class FurnitureService {
         wardrobe.setMaterial(WardrobeMaterial.valueOf(furnitureEditRequest.getMaterial().toUpperCase()));
         wardrobe.setAdditionalInformation(furnitureEditRequest.getAdditionalInformation());
         wardrobe.setStock(furnitureEditRequest.getStock());
-        wardrobe.setFileName(furnitureEditRequest.getFileName());
+        wardrobe.setFileName(Integer.toString(furniture.getId()));
         wardrobe.setImagesUrl(furnitureEditRequest.getImagesUrl());
         wardrobe.setFurniture(furniture);
     }
 
     private void updateChair(Chair chair, FurnitureEditRequest furnitureEditRequest, Furniture furniture) {
-        chair.setId(furnitureEditRequest.getId());
+        chair.setId(furniture.getId());
         chair.setMaxWeight(furnitureEditRequest.getMaxWeight());
         chair.setWidth(furnitureEditRequest.getWidth());
         chair.setHeight(furnitureEditRequest.getHeight());
@@ -117,17 +123,31 @@ public class FurnitureService {
         chair.setMaterial(ChairMaterial.valueOf(furnitureEditRequest.getMaterial().toUpperCase()));
         chair.setAdditionalInformation(furnitureEditRequest.getAdditionalInformation());
         chair.setStock(furnitureEditRequest.getStock());
-        chair.setFileName(furnitureEditRequest.getFileName());
+        chair.setFileName(Integer.toString(furniture.getId()));
         chair.setImagesUrl(furnitureEditRequest.getImagesUrl());
         chair.setFurniture(furniture);
     }
 
     private void updateFurniture(Furniture furniture, FurnitureEditRequest furnitureEditRequest) {
-        furniture.setId(furnitureEditRequest.getId());
         furniture.setTitle(furnitureEditRequest.getTitle());
         furniture.setPrice(furnitureEditRequest.getPrice());
         furniture.setImgUrl(furnitureEditRequest.getImgUrl());
-        furniture.setFurnitureType(FurnitureType.valueOf(furnitureEditRequest.getFurnitureType()));
+        furniture.setFurnitureType(FurnitureType.valueOf(furnitureEditRequest.getFurnitureType().toUpperCase()));
     }
 
+    @Transactional
+    public void deleteChair(Integer id) {
+        Optional<Furniture> furniture = furnitureRepository.findById(id);
+        Optional<Chair> chair = chairRepository.findById(id);
+        chair.ifPresent(chairRepository::delete);
+        furniture.ifPresent(furnitureRepository::delete);
+    }
+
+    @Transactional
+    public void deleteWardrobe(Integer id) {
+        Optional<Furniture> furniture = furnitureRepository.findById(id);
+        Optional<Wardrobe> chair = wardrobeRepository.findById(id);
+        chair.ifPresent(wardrobeRepository::delete);
+        furniture.ifPresent(furnitureRepository::delete);
+    }
 }

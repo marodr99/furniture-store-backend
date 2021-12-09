@@ -12,6 +12,9 @@ import pk.furniturestorebackend.furniture.FurnitureResponse;
 import pk.furniturestorebackend.furniture.FurnitureService;
 import pk.furniturestorebackend.wardrobes.WardrobesSearchOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/furniture")
 public class FurnitureController {
@@ -50,8 +53,23 @@ public class FurnitureController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<Void> editFurniture(@RequestBody FurnitureEditRequest furnitureEditRequest) {
-        furnitureService.editFurniture(furnitureEditRequest);
+    public ResponseEntity<Map<String, Integer>> editFurniture(@RequestBody FurnitureEditRequest furnitureEditRequest) {
+        Integer furnitureId = furnitureService.editFurniture(furnitureEditRequest);
+
+        Map<String, Integer> response = new HashMap<>();
+        response.put("furnitureId", furnitureId);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/chairs/delete/{id}")
+    public ResponseEntity<Void> deleteChair(@PathVariable Integer id) {
+        furnitureService.deleteChair(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/wardrobes/delete/{id}")
+    public ResponseEntity<Void> deleteWardrobe(@PathVariable Integer id) {
+        furnitureService.deleteWardrobe(id);
         return ResponseEntity.ok().build();
     }
 }

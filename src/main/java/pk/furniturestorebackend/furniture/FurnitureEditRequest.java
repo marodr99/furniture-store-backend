@@ -17,7 +17,7 @@ public class FurnitureEditRequest {
     private Integer depth;
     private String color;
     @JsonProperty("material")
-    @JsonAlias({"chairMaterial", "wardrobeMaterial"})
+    @JsonAlias({"chairMaterial", "wardrobeMaterial", "material"})
     private String material;
     private String additionalInformation;
     private Integer stock;
