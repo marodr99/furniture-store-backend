@@ -14,6 +14,8 @@ import pk.furniturestorebackend.security.SecurityConfig;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdersService {
@@ -62,5 +64,30 @@ public class OrdersService {
 
     public SingleOrder getOrder(Integer id) {
         return ordersRepository.findByOrderIdAndEmail(id, SecurityConfig.getPrincipal());
+    }
+
+    public List<FullOrderInfo> getAllOrders() {
+        return ordersRepository.findAll().stream().map(this::createWithFullInfo).collect(Collectors.toList());
+    }
+
+    private FullOrderInfo createWithFullInfo(OrderEntity orderEntity) {
+        FullOrderInfo fullOrderInfo = new FullOrderInfo();
+        BeanUtils.copyProperties(orderEntity, fullOrderInfo);
+        BeanUtils.copyProperties(orderEntity.getFurniture(), fullOrderInfo);
+        fullOrderInfo.setFurnitureId(orderEntity.getFurniture().getId());
+        return fullOrderInfo;
+    }
+
+    @Transactional
+    public void modifyOrder(Integer id, FullOrderInfo fullOrderInfo) {
+        OrderEntity orderEntity = ordersRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order with id " + id + " not found"));
+        BeanUtils.copyProperties(fullOrderInfo, orderEntity);
+    }
+
+    @Transactional
+    public void deleteOrder(Integer id) {
+        Optional<OrderEntity> order = ordersRepository.findById(id);
+        order.ifPresent(ordersRepository::delete);
     }
 }
